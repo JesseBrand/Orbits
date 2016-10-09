@@ -1,9 +1,11 @@
 <link rel="import" href="../../../components/polymer/polymer.html" />
 <link rel="import" href="../../../components/paper-card/paper-card.html" />
 <link rel="import" href="../../../components/paper-input/paper-input.html" />
+<link rel="import" href="../jb-3js-container/jb-3js-container.html" />
+<link rel="import" href="../jb-3js-flightcontrols/jb-3js-flightcontrols.html" />
 
 <link rel="import" href="../jb-orbit/jb-orbit.html" />
-        
+
 <dom-module id="jb-orbital-reference">
     <template>
     	<paper-card style="padding:20px">
@@ -21,7 +23,10 @@
     		<paper-input label="Distance to body (r)" value="{{distFocus}}" readonly><div suffix>m</div></paper-input>
     		<paper-input label=" Orbital velocity at location (v)" value="{{orbitalVelocity}}" readonly><div suffix>m/s</div></paper-input>
    		</paper-card>
-		<jb-orbit></jb-orbit>
+   		<jb-3js-container debug>
+   			<jb-3js-flightcontrols></jb-3js-flightcontrols>
+			<jb-orbit></jb-orbit>
+		</jb-3js-container>
     	<content></content>
     </template>
 </dom-module>
