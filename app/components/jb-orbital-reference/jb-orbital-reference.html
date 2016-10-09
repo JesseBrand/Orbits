@@ -1,0 +1,164 @@
+<link rel="import" href="../../../components/polymer/polymer.html" />
+<link rel="import" href="../../../components/paper-card/paper-card.html" />
+<link rel="import" href="../../../components/paper-input/paper-input.html" />
+
+<link rel="import" href="../jb-orbit/jb-orbit.html" />
+        
+<dom-module id="jb-orbital-reference">
+    <template>
+    	<paper-card style="padding:20px">
+    		<paper-input label="Semi-Major Axis (a)" value="{{semiMajorAxis}}"><div suffix>m</div></paper-input>
+    		<paper-input label="Semi-Minor Axis (b)" value="{{semiMinorAxis}}"><div suffix>m</div></paper-input>
+    		<paper-input label="Eccentricity (e)" value="{{eccentricity}}"></paper-input>
+<!--     		<paper-input label="Distance from focus to center" value="{{focusCenterDist}}" readonly><div suffix>m</div></paper-input> -->
+    		<paper-input label="Period (P)" value="{{period}}" readonly><div suffix>s</div></paper-input>
+    		<paper-input label="Orbited Body Mass (m1)" value="{{orbitedBodyMass}}" readonly><div suffix>kg</div></paper-input>
+<!--     		<paper-input label="Standard Gravitational Parameter (μ)" value="{{standardGravitationalParameter}}" readonly><div suffix>m³/s²</div></paper-input> -->
+    		<paper-input label="Location of sat in orbit (t)" value="{{orbitAngle}}"><div suffix>deg</div></paper-input>
+<!--     		<paper-input label="Distance to center" value="{{distCenter}}" readonly><div suffix>m</div></paper-input> -->
+<!--     		<paper-input label="Distance to center (hor)" value="{{distCenterHor}}" readonly><div suffix>m</div></paper-input> -->
+<!--     		<paper-input label="Distance to center (ver)" value="{{distCenterVer}}" readonly><div suffix>m</div></paper-input> -->
+    		<paper-input label="Distance to body (r)" value="{{distFocus}}" readonly><div suffix>m</div></paper-input>
+    		<paper-input label=" Orbital velocity at location (v)" value="{{orbitalVelocity}}" readonly><div suffix>m/s</div></paper-input>
+   		</paper-card>
+		<jb-orbit></jb-orbit>
+    	<content></content>
+    </template>
+</dom-module>
+
+<script>
+Polymer({
+    is: 'jb-orbital-reference',
+    properties: {
+    	semiMajorAxis: {
+    		type: Number,
+    		value: 6771000,
+    		observer: '_semiMajorAxisChanged'
+    	},
+    	semiMinorAxis: {
+    		type: Number,
+    		observer: '_semiMinorAxisChanged'
+    	},
+    	eccentricity: {
+    		type: Number,
+    		observer: '_eccentricityChanged'
+    	},
+    	orbitedBodyMass: {
+    		type: Number,
+    		value: 5.972e24,
+    		observer: '_orbitedBodyMassChanged'
+    	},
+    	orbitAngle: {
+    		type: Number,
+    		observer: '_orbitAngleChanged',
+    		value: 0
+    	}
+    },
+    created: function() {
+    	this.gravitationalConstant = 6.674e-11;
+    },
+    ready: function() {
+    	if (this.eccentricity === '') {
+			this.eccentricity = 0;
+    	}
+    },
+    _semiMajorAxisChanged: function() {
+    	console.log('major changed', this.semiMajorAxis);
+    	if (typeof this.eccentricy !== 'undefined' && this.eccentricity !== '') {
+    		this._calcMinorByMajorAndEcc();
+    		this._calcfocusCenterDistByMajorAndEcc();
+    		this._calcPeriodByMajorAndEcc();
+    		this._calcDistCenterByAxesAndOrbitAngle();
+    	}
+    },
+    _semiMinorAxisChanged: function() {
+    	console.log('minor changed', this.semiMinorAxis);
+    	if (isNaN(parseFloat(this.semiMinorAxis, 10))) {
+        	return;
+    	}
+    	if (this.semiMajorAxis !== '') {
+    		this._calcEccByMajorAndMinor();
+    		this._calcDistCenterByAxesAndOrbitAngle();
+    	}
+    },
+    _eccentricityChanged: function() {
+    	console.log('ecc changed', this.eccentricity);
+    	if (isNaN(parseFloat(this.eccentricity, 10))) {
+    		return;
+    	}
+    	if (this.eccentricity !== '' && this.semiMajorAxis) {
+    		this._calcMinorByMajorAndEcc();
+    		this._calcfocusCenterDistByMajorAndEcc();
+    		this._calcPeriodByMajorAndEcc();
+    	}
+    },
+    _orbitAngleChanged: function() {
+    	console.log('orbit angle changed', this.orbitAngle);
+    	this._calcDistCenterByAxesAndOrbitAngle();
+    },
+    _orbitedBodyMassChanged: function() {
+    	console.log('orbited body mass changed', this.orbitedBodyMass);
+    	this._calcStandardGravitationalParameter();
+    },
+    _calcStandardGravitationalParameter: function() {
+    	console.log('calc std grav param');
+    	this.standardGravitationalParameter = this.gravitationalConstant * this.orbitedBodyMass;
+    	this._calcPeriodByMajorAndEcc();
+    	this._calcVelocityByDistFocus();
+    },
+    _calcMinorByMajorAndEcc: function() {
+    	console.log('calc minor');
+   		var e = this.eccentricity;
+    	this.semiMinorAxis = this.semiMajorAxis * Math.sqrt(1 - (e * e));
+   	},
+   	_calcEccByMajorAndMinor: function() {
+   		console.log('calc ecc');
+   		var a = this.semiMajorAxis;
+   		var b = this.semiMinorAxis;
+   		this.eccentricity = Math.sqrt(1 - (b * b) / (a * a));
+   	},
+   	_calcfocusCenterDistByMajorAndEcc: function() {
+   		console.log('calc focus dist');
+   		this.focusCenterDist = this.semiMajorAxis * this.eccentricity;
+   		this._calcDistFocusByOrbitAngleAndDistCenter();
+   	},
+   	_calcPeriodByMajorAndEcc: function() {
+   		console.log('calc period');
+   		this.period = 2 * Math.PI * Math.sqrt(Math.pow(this.semiMajorAxis, 3) / this.standardGravitationalParameter);
+   	},
+   	_calcDistCenterByAxesAndOrbitAngle: function() {
+   		console.log('calc dist center');
+   		var a = this.semiMajorAxis;
+   		var b = this.semiMinorAxis;
+   		var s = Math.sin(Math.rad(this.orbitAngle));
+        var c = Math.cos(Math.rad(this.orbitAngle));
+   		this.distCenter = (a * b) / Math.sqrt((a * a) * (s * s) + (b * b) * (c * c));
+   		this._calcDistFocusByOrbitAngleAndDistCenter();
+   	},
+   	_calcDistFocusByOrbitAngleAndDistCenter() {
+   		var s = Math.sin(Math.rad(this.orbitAngle));
+        var c = Math.cos(Math.rad(this.orbitAngle));
+   		this.distCenterHor = -c * this.distCenter;
+   		this.distCenterVer = s * this.distCenter;
+   		var xi = this.distCenterHor + this.focusCenterDist;
+   		var yi = this.distCenterVer;
+   		this.distFocus = Math.sqrt((xi * xi) + (yi * yi));
+   		this._calcVelocityByDistFocus();
+   	},
+   	_calcVelocityByDistFocus: function() {
+   		var u = this.standardGravitationalParameter;
+   		var a = this.semiMajorAxis;
+   		var r = this.distFocus;
+   		this.orbitalVelocity = Math.sqrt(u * (2 / r - 1 / a));
+   	}
+   	
+});
+    
+Math.rad = function(deg) {
+    return deg * Math.PI / 180;
+};
+
+Math.deg = function(rad) {
+    return rad * 180 / Math.PI;
+};
+</script>

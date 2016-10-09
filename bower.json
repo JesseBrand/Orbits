@@ -1,0 +1,15 @@
+{
+  "name": "orbits",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.3",
+    "paper-card": "PolymerElements/paper-card#^1.0.0",
+    "paper-input": "PolymerElements/paper-input#^1.0.0"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
