@@ -2,8 +2,10 @@
 <link rel="import" href="/components/paper-card/paper-card.html" />
 <link rel="import" href="/components/paper-input/paper-input.html" />
 <link rel="import" href="/components/jb-3js/jb-3js-container.html" />
+<link rel="import" href="/components/jb-3js/jb-3js-directional-light.html" />
 <link rel="import" href="/components/jb-3js/jb-3js-flightcontrols.html" />
 <link rel="import" href="/components/jb-3js/jb-3js-helper-debug.html" />
+<link rel="import" href="/components/jb-3js/jb-3js-sphere.html" />
 <link rel="import" href="jb-orbit.html" />
 
 <dom-module id="jb-orbital-reference">
@@ -25,7 +27,10 @@
    		</paper-card>
    		<jb-3js-container debug>
    			<jb-3js-flightcontrols rotation-x="-45" y="20" z="20"></jb-3js-flightcontrols>
-			<jb-orbit color="0xff0000"></jb-orbit>
+   			<jb-3js-directional-light x="-100"></jb-3js-directional-light>
+			<jb-orbit color="0x808080" semi-major-axis="100" eccentricity="0.8">
+				<jb-3js-sphere color="0x0000ff"></jb-3js-sphere>
+			</jb-orbit>
 		</jb-3js-container>
     	<content></content>
     </template>
@@ -72,7 +77,7 @@ Polymer({
     	if (this.debug) {console.log('major changed', this.semiMajorAxis);}
     	if (typeof this.eccentricy !== 'undefined' && this.eccentricity !== '') {
     		this._calcMinorByMajorAndEcc();
-    		this._calcfocusCenterDistByMajorAndEcc();
+    		this._calcFocusCenterDistByMajorAndEcc();
     		this._calcPeriodByMajorAndEcc();
     		this._calcDistCenterByAxesAndOrbitAngle();
     	}
@@ -94,7 +99,7 @@ Polymer({
     	}
     	if (this.eccentricity !== '' && this.semiMajorAxis) {
     		this._calcMinorByMajorAndEcc();
-    		this._calcfocusCenterDistByMajorAndEcc();
+    		this._calcFocusCenterDistByMajorAndEcc();
     		this._calcPeriodByMajorAndEcc();
     	}
     },
@@ -123,7 +128,7 @@ Polymer({
    		var b = this.semiMinorAxis;
    		this.eccentricity = Math.sqrt(1 - (b * b) / (a * a));
    	},
-   	_calcfocusCenterDistByMajorAndEcc: function() {
+   	_calcFocusCenterDistByMajorAndEcc: function() {
    		if (this.debug) {console.log('calc focus dist');}
    		this.focusCenterDist = this.semiMajorAxis * this.eccentricity;
    		this._calcDistFocusByOrbitAngleAndDistCenter();

@@ -26,6 +26,9 @@
 				value: 1
 			}
         },
+        observers: [
+        	'propertiesChanged(semi-major-axis, semi-minor-axis)'
+        ],
         created: function() {
        		var material = new THREE.LineBasicMaterial(this.color);
 
@@ -33,11 +36,15 @@
        		this.mesh = new THREE.Line(new THREE.Geometry(), material);
        		this._renewGeometry();
         },
+        propertiesChanged: function(a, b) {
+        	this.semiMajorAxis = a;
+        	this.semiMinorAxis = b;
+        	this._renewGeometry();
+        },
         _renewGeometry: function() {
        		var curve = new THREE.EllipseCurve(
            		0, 0,             // ax, aY
-//          		this.semiMajorAxis, this.semiMinorAxis, // xRadius, yRadius
-          		10, 10, // xRadius, yRadius
+          		this.semiMajorAxis, this.semiMinorAxis, // xRadius, yRadius
           		0,  2 * Math.PI,  // aStartAngle, aEndAngle
          		false,            // aClockwise
           		0                 // aRotation
@@ -49,7 +56,6 @@
 	        this.mesh.name = this.name;
 	        this.mesh.material.color = new THREE.Color(this.color);
 	        this._renewGeometry();
-	        console.log(this.mesh);
         },
         attached: function() {
             this.fire('add-to-scene', this.mesh);
