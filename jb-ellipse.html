@@ -1,18 +1,22 @@
-<link rel="import" href="../../../components/polymer/polymer.html" />
-<link rel="import" href="../jb-3js-helper-position/jb-3js-helper-position.html" />
+<link rel="import" href="/components/polymer/polymer.html" />
+<link rel="import" href="/components/jb-3js/jb-3js-helper-color.html" />
+<link rel="import" href="/components/jb-3js/jb-3js-helper-position.html" />
 
-<dom-module id="jb-orbit">
+<dom-module id="jb-ellipse">
     <template>
-    	<content></content>
+        <content></content>
     </template>
 </dom-module>
 
 <script>
     Polymer({
-        is: 'jb-orbit',
-
-        behaviors: [PositionBehavior],
+        is: 'jb-ellipse',
+        behaviors: [PositionBehavior, ColorBehavior],
         properties: {
+        	name: {
+        		type: String,
+        		value: 'Ellipse'
+        	},
         	semiMajorAxis: {
         		type: Number,
         		value: 1
@@ -23,7 +27,6 @@
 			}
         },
         created: function() {
-        	console.log('orbit created')
        		var curve = new THREE.EllipseCurve(
        			0, 0,             // ax, aY
 //        			this.semiMajorAxis, this.semiMinorAxis, // xRadius, yRadius
@@ -32,15 +35,17 @@
        			false,            // aClockwise
        			0                 // aRotation
        		);
-        	console.log(curve);
+       		console.log(curve);
 
-       		var path = new THREE.Path( curve.getPoints( 50 ) );
-       		var geometry = path.createPointsGeometry( 50 );
-       		var material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
+       		var path = new THREE.Path(curve.getPoints(50));
+       		var geometry = path.createPointsGeometry(50);
+       		var material = new THREE.LineBasicMaterial(this.color);
 
        		// Create the final Object3d to add to the scene
        		this.mesh = new THREE.Line( geometry, material );
-	        this.mesh.name = 'Orbit';
+        },
+        ready: function() {
+	        this.mesh.name = this.name;
         },
         attached: function() {
             this.fire('add-to-scene', this.mesh);

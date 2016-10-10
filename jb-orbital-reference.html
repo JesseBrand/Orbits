@@ -1,10 +1,10 @@
-<link rel="import" href="../../../components/polymer/polymer.html" />
-<link rel="import" href="../../../components/paper-card/paper-card.html" />
-<link rel="import" href="../../../components/paper-input/paper-input.html" />
-<link rel="import" href="../jb-3js-container/jb-3js-container.html" />
-<link rel="import" href="../jb-3js-flightcontrols/jb-3js-flightcontrols.html" />
-
-<link rel="import" href="../jb-orbit/jb-orbit.html" />
+<link rel="import" href="/components/polymer/polymer.html" />
+<link rel="import" href="/components/paper-card/paper-card.html" />
+<link rel="import" href="/components/paper-input/paper-input.html" />
+<link rel="import" href="/components/jb-3js/jb-3js-container.html" />
+<link rel="import" href="/components/jb-3js/jb-3js-flightcontrols.html" />
+<link rel="import" href="/components/jb-3js/jb-3js-helper-debug.html" />
+<link rel="import" href="jb-orbit.html" />
 
 <dom-module id="jb-orbital-reference">
     <template>
@@ -24,7 +24,7 @@
     		<paper-input label=" Orbital velocity at location (v)" value="{{orbitalVelocity}}" readonly><div suffix>m/s</div></paper-input>
    		</paper-card>
    		<jb-3js-container debug>
-   			<jb-3js-flightcontrols></jb-3js-flightcontrols>
+   			<jb-3js-flightcontrols rotation-x="-45" y="20" z="20"></jb-3js-flightcontrols>
 			<jb-orbit></jb-orbit>
 		</jb-3js-container>
     	<content></content>
@@ -34,6 +34,7 @@
 <script>
 Polymer({
     is: 'jb-orbital-reference',
+    behaviors: [DebugBehavior],
     properties: {
     	semiMajorAxis: {
     		type: Number,
@@ -68,7 +69,7 @@ Polymer({
     	}
     },
     _semiMajorAxisChanged: function() {
-    	console.log('major changed', this.semiMajorAxis);
+    	if (this.debug) {console.log('major changed', this.semiMajorAxis);}
     	if (typeof this.eccentricy !== 'undefined' && this.eccentricity !== '') {
     		this._calcMinorByMajorAndEcc();
     		this._calcfocusCenterDistByMajorAndEcc();
@@ -77,7 +78,7 @@ Polymer({
     	}
     },
     _semiMinorAxisChanged: function() {
-    	console.log('minor changed', this.semiMinorAxis);
+    	if (this.debug) {console.log('minor changed', this.semiMinorAxis);}
     	if (isNaN(parseFloat(this.semiMinorAxis, 10))) {
         	return;
     	}
@@ -87,7 +88,7 @@ Polymer({
     	}
     },
     _eccentricityChanged: function() {
-    	console.log('ecc changed', this.eccentricity);
+    	if (this.debug) {console.log('ecc changed', this.eccentricity);}
     	if (isNaN(parseFloat(this.eccentricity, 10))) {
     		return;
     	}
@@ -98,41 +99,41 @@ Polymer({
     	}
     },
     _orbitAngleChanged: function() {
-    	console.log('orbit angle changed', this.orbitAngle);
+    	if (this.debug) {console.log('orbit angle changed', this.orbitAngle);}
     	this._calcDistCenterByAxesAndOrbitAngle();
     },
     _orbitedBodyMassChanged: function() {
-    	console.log('orbited body mass changed', this.orbitedBodyMass);
+    	if (this.debug) {console.log('orbited body mass changed', this.orbitedBodyMass);}
     	this._calcStandardGravitationalParameter();
     },
     _calcStandardGravitationalParameter: function() {
-    	console.log('calc std grav param');
+    	if (this.debug) {console.log('calc std grav param');}
     	this.standardGravitationalParameter = this.gravitationalConstant * this.orbitedBodyMass;
     	this._calcPeriodByMajorAndEcc();
     	this._calcVelocityByDistFocus();
     },
     _calcMinorByMajorAndEcc: function() {
-    	console.log('calc minor');
+    	if (this.debug) {console.log('calc minor');}
    		var e = this.eccentricity;
     	this.semiMinorAxis = this.semiMajorAxis * Math.sqrt(1 - (e * e));
    	},
    	_calcEccByMajorAndMinor: function() {
-   		console.log('calc ecc');
+   		if (this.debug) {console.log('calc ecc');}
    		var a = this.semiMajorAxis;
    		var b = this.semiMinorAxis;
    		this.eccentricity = Math.sqrt(1 - (b * b) / (a * a));
    	},
    	_calcfocusCenterDistByMajorAndEcc: function() {
-   		console.log('calc focus dist');
+   		if (this.debug) {console.log('calc focus dist');}
    		this.focusCenterDist = this.semiMajorAxis * this.eccentricity;
    		this._calcDistFocusByOrbitAngleAndDistCenter();
    	},
    	_calcPeriodByMajorAndEcc: function() {
-   		console.log('calc period');
+   		if (this.debug) {console.log('calc period');}
    		this.period = 2 * Math.PI * Math.sqrt(Math.pow(this.semiMajorAxis, 3) / this.standardGravitationalParameter);
    	},
    	_calcDistCenterByAxesAndOrbitAngle: function() {
-   		console.log('calc dist center');
+   		if (this.debug) {console.log('calc dist center');}
    		var a = this.semiMajorAxis;
    		var b = this.semiMinorAxis;
    		var s = Math.sin(Math.rad(this.orbitAngle));
@@ -141,6 +142,7 @@ Polymer({
    		this._calcDistFocusByOrbitAngleAndDistCenter();
    	},
    	_calcDistFocusByOrbitAngleAndDistCenter() {
+   		if (this.debug) {console.log('calc dist to focus');}
    		var s = Math.sin(Math.rad(this.orbitAngle));
         var c = Math.cos(Math.rad(this.orbitAngle));
    		this.distCenterHor = -c * this.distCenter;
@@ -151,6 +153,7 @@ Polymer({
    		this._calcVelocityByDistFocus();
    	},
    	_calcVelocityByDistFocus: function() {
+   		if (this.debug) {console.log('calc velocity');}
    		var u = this.standardGravitationalParameter;
    		var a = this.semiMajorAxis;
    		var r = this.distFocus;
