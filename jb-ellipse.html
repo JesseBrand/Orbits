@@ -11,7 +11,7 @@
 <script>
     Polymer({
         is: 'jb-ellipse',
-        behaviors: [PositionBehavior, ColorBehavior],
+        behaviors: [ColorBehavior],
         properties: {
         	name: {
         		type: String,
@@ -24,7 +24,9 @@
 			semiMinorAxis: {
 				type: Number,
 				value: 1
-			}
+			},
+			drawMajorAxis: Boolean,
+			drawMinorAxis: Boolean
         },
         observers: [
         	'propertiesChanged(semi-major-axis, semi-minor-axis)'
@@ -34,6 +36,10 @@
 
        		// Create the final Object3d to add to the scene
        		this.mesh = new THREE.Line(new THREE.Geometry(), material);
+       		this.majorLineMesh = new THREE.Line(new THREE.Geometry(), material);
+       		this.minorLineMesh = new THREE.Line(new THREE.Geometry(), material);
+       		this.majorLineMesh.geometry.vertices.push(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, 0));
+       		this.minorLineMesh.geometry.vertices.push(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, 0));
        		this._renewGeometry();
         },
         propertiesChanged: function(a, b) {
@@ -51,6 +57,10 @@
           	);
           	var path = new THREE.Path(curve.getPoints(50));
           	this.mesh.geometry = path.createPointsGeometry(50);
+          	this.majorLineMesh.geometry.vertices[0].x = -this.semiMajorAxis;
+          	this.majorLineMesh.geometry.vertices[1].x = this.semiMajorAxis;
+          	this.minorLineMesh.geometry.vertices[0].y = -this.semiMinorAxis;
+          	this.minorLineMesh.geometry.vertices[1].y = this.semiMinorAxis;
         },
         ready: function() {
 	        this.mesh.name = this.name;
@@ -59,7 +69,12 @@
         },
         attached: function() {
             this.fire('add-to-scene', this.mesh);
+            if (this.drawMajorAxis) {
+            	this.fire('add-to-scene', this.majorLineMesh);
+            }
+            if (this.drawMinorAxis) {
+            	this.fire('add-to-scene', this.minorLineMesh);
+            }
         }
-        
     });
 </script>
