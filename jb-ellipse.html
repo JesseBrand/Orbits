@@ -27,25 +27,29 @@
 			}
         },
         created: function() {
-       		var curve = new THREE.EllipseCurve(
-       			0, 0,             // ax, aY
-//        			this.semiMajorAxis, this.semiMinorAxis, // xRadius, yRadius
-       			10, 10, // xRadius, yRadius
-       			0,  2 * Math.PI,  // aStartAngle, aEndAngle
-       			false,            // aClockwise
-       			0                 // aRotation
-       		);
-       		console.log(curve);
-
-       		var path = new THREE.Path(curve.getPoints(50));
-       		var geometry = path.createPointsGeometry(50);
        		var material = new THREE.LineBasicMaterial(this.color);
 
        		// Create the final Object3d to add to the scene
-       		this.mesh = new THREE.Line( geometry, material );
+       		this.mesh = new THREE.Line(new THREE.Geometry(), material);
+       		this._renewGeometry();
+        },
+        _renewGeometry: function() {
+       		var curve = new THREE.EllipseCurve(
+           		0, 0,             // ax, aY
+//          		this.semiMajorAxis, this.semiMinorAxis, // xRadius, yRadius
+          		10, 10, // xRadius, yRadius
+          		0,  2 * Math.PI,  // aStartAngle, aEndAngle
+         		false,            // aClockwise
+          		0                 // aRotation
+          	);
+          	var path = new THREE.Path(curve.getPoints(50));
+          	this.mesh.geometry = path.createPointsGeometry(50);
         },
         ready: function() {
 	        this.mesh.name = this.name;
+	        this.mesh.material.color = new THREE.Color(this.color);
+	        this._renewGeometry();
+	        console.log(this.mesh);
         },
         attached: function() {
             this.fire('add-to-scene', this.mesh);

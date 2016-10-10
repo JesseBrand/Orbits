@@ -1,4 +1,5 @@
 <link rel="import" href="/components/polymer/polymer.html" />
+<link rel="import" href="/components/jb-3js/jb-3js-helper-color.html" />
 <link rel="import" href="/components/jb-3js/jb-3js-helper-position.html" />
 <link rel="import" href="/components/jb-3js/jb-3js-transformation.html" />
 <link rel="import" href="jb-ellipse.html" />
@@ -16,7 +17,7 @@
 <script>
     Polymer({
         is: 'jb-orbit',
-        behaviors: [PositionBehavior],
+        behaviors: [PositionBehavior, ColorBehavior],
         properties: {
         	semiMajorAxis: {
         		type: Number,
