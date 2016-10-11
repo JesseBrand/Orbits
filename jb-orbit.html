@@ -7,7 +7,7 @@
 <dom-module id="jb-orbit">
     <template>
        	<template is="dom-if" if="{{hasInclination()}}">
-	        <jb-3js-transformation rotation-x="90" x="{{focusToCenterDistance}}">
+	        <jb-3js-transformation rotation-x="90" x="{{flatFocusToCenterDistance}}" scale-x="{{flatScaleX}}">
 	            <jb-ellipse draw-major-axis name="OrbitPlane" color="0x600000" semi-major-axis="{{semiMajorAxis}}" eccentricity="{{eccentricity}}"></jb-ellipse>
 	        </jb-3js-transformation>
        	</template>
@@ -37,13 +37,34 @@
         		type: Number,
         		value: 0
         	},
+			semiMinorAxis: {
+				type: Number,
+				computed: '_getSemiMinorAxis(semiMajorAxis, eccentricity)'
+			},
 			focusToCenterDistance: {
 				type: Number,
 				computed: '_getFocusToCenterDistance(semiMajorAxis, eccentricity)'
+			},
+			flatScaleX: {
+				type: Number,
+				computed: '_getFlatScaleX(semiMajorAxis, inclination)'
+			},
+			flatFocusToCenterDistance: {
+				type: Number,
+				computed: '_getFlatFocusToCenterDistance(focusToCenterDistance, flatScaleX)'
 			}
+        },
+        _getSemiMinorAxis: function(a, e) {
+           	return a * Math.sqrt(1 - (e * e));
         },
         _getFocusToCenterDistance: function(a, e) {
         	return a * e;
+        },
+        _getFlatScaleX: function(a, i) {
+        	return Math.cos(Math.rad(i));
+        },
+        _getFlatFocusToCenterDistance: function(d, s) {
+        	return d * s;
         },
         hasInclination: function() {
         	return this.inclination !== 0;
