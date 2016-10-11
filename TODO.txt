@@ -1,0 +1,3 @@
+- start searching for relation between angular velocity and position
+- animate
+- increasing orbit based on velocity at location, keep distance to body.
