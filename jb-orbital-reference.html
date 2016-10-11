@@ -5,6 +5,7 @@
 <link rel="import" href="/components/jb-3js/jb-3js-directional-light.html" />
 <link rel="import" href="/components/jb-3js/jb-3js-flightcontrols.html" />
 <link rel="import" href="/components/jb-3js/jb-3js-helper-debug.html" />
+<link rel="import" href="/components/jb-3js/jb-3js-helper-math.html" />
 <link rel="import" href="/components/jb-3js/jb-3js-sphere.html" />
 <link rel="import" href="jb-orbit.html" />
 
@@ -24,11 +25,12 @@
 <!--     		<paper-input label="Distance to center (ver)" value="{{distCenterVer}}" readonly><div suffix>m</div></paper-input> -->
     		<paper-input label="Distance to body (r)" value="{{distFocus}}" readonly><div suffix>m</div></paper-input>
     		<paper-input label=" Orbital velocity at location (v)" value="{{orbitalVelocity}}" readonly><div suffix>m/s</div></paper-input>
+    		<paper-input label="Inclination (i)" value="{{inclination}}"><div suffix>deg</div></paper-input>
    		</paper-card>
    		<jb-3js-container debug>
    			<jb-3js-flightcontrols rotation-x="-45" y="20" z="20"></jb-3js-flightcontrols>
    			<jb-3js-directional-light x="-100"></jb-3js-directional-light>
-			<jb-orbit color="0x808080" semi-major-axis="100" eccentricity="0.8" inclination="45">
+			<jb-orbit color="0x808080" semi-major-axis="100" eccentricity="0.8" inclination="{{inclination}}">
 				<jb-3js-sphere radius="2" color="0x0000ff"></jb-3js-sphere>
 			</jb-orbit>
 		</jb-3js-container>
@@ -63,6 +65,10 @@ Polymer({
     		type: Number,
     		observer: '_orbitAngleChanged',
     		value: 0
+    	},
+    	inclination: {
+    		type: Number,
+    		value: 22
     	}
     },
     created: function() {
@@ -166,12 +172,4 @@ Polymer({
    	}
    	
 });
-    
-Math.rad = function(deg) {
-    return deg * Math.PI / 180;
-};
-
-Math.deg = function(rad) {
-    return rad * 180 / Math.PI;
-};
 </script>
