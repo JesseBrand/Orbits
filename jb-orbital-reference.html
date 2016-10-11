@@ -29,16 +29,18 @@
     		<paper-input label=" Orbital velocity at location (v)" value="{{orbitalVelocity}}" readonly><div suffix>m/s</div></paper-input>
     		<paper-input label="Inclination (i)" value="{{inclination}}"><div suffix>deg</div></paper-input>
    		</paper-card>
-   		<jb-3js-container camera-far-plane="16777216">
-   			<jb-3js-flightcontrols z="100000" speed="1000"></jb-3js-flightcontrols>
-   			<jb-3js-directional-light x="-149600000"></jb-3js-directional-light>
-			<jb-orbit color="0x808080" semi-major-axis="{{semiMajorAxisKM}}" eccentricity="{{eccentricity}}" inclination="{{inclination}}">
-				<jb-3js-sphere radius="1000" color="0x0000ff"></jb-3js-sphere>
-				<jb-3js-star-sphere radius="1000000"></jb-3js-star-sphere>
-			</jb-orbit>
-			
-		</jb-3js-container>
-    	<content></content>
+   		<div style="vertical-align: top; width: 1280px; height: 650px; display: inline-block">
+	   		<jb-3js-container camera-far-plane="16777216" width="1280" height="650">
+	   			<jb-3js-flightcontrols z="100000" speed="1000"></jb-3js-flightcontrols>
+	   			<jb-3js-directional-light x="-149600000"></jb-3js-directional-light>
+				<jb-orbit color="0x808080" semi-major-axis="{{semiMajorAxisKM}}" eccentricity="{{eccentricity}}" inclination="{{inclination}}">
+					<jb-3js-sphere radius="1000" color="0x0000ff"></jb-3js-sphere>
+					<jb-3js-star-sphere radius="1000000"></jb-3js-star-sphere>
+				</jb-orbit>
+				
+			</jb-3js-container>
+	    	<content></content>
+    	</div>
     </template>
 </dom-module>
 
