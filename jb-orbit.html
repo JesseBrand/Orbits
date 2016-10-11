@@ -3,12 +3,15 @@
 <link rel="import" href="/components/jb-3js/jb-3js-helper-position.html" />
 <link rel="import" href="/components/jb-3js/jb-3js-transformation.html" />
 <link rel="import" href="/components/jb-3js/jb-3js-ellipse.html" />
+<link rel="import" href="/components/jb-3js/jb-3js-straight-line.html" />
 
 <dom-module id="jb-orbit">
     <template>
        	<template is="dom-if" if="{{hasInclination()}}">
 	        <jb-3js-transformation rotation-x="90" x="{{flatFocusToCenterDistance}}" scale-x="{{flatScaleX}}">
 	            <jb-3js-ellipse draw-major-axis name="OrbitPlane" color="0x600000" semi-major-axis="{{semiMajorAxis}}" eccentricity="{{eccentricity}}"></jb-ellipse>
+	            <jb-3js-straight-line color="0x600000" x="{{semiMajorAxis}}" target-x="{{semiMajorAxis}}" target-z="{{longLineLength}}"></jb-3js-straight-line>
+	            <jb-3js-straight-line color="0x600000" x="{{negativeSemiMajorAxis}}" target-x="{{negativeSemiMajorAxis}}" target-z="{{shortLineLength}}"></jb-3js-straight-line>
 	        </jb-3js-transformation>
        	</template>
         <jb-3js-transformation x="{{x}}" y="{{y}}" z="{{z}}" rotation-z="{{inclination}}">
@@ -52,6 +55,18 @@
 			flatFocusToCenterDistance: {
 				type: Number,
 				computed: '_getFlatFocusToCenterDistance(focusToCenterDistance, flatScaleX)'
+			},
+			longLineLength: {
+				type: Number,
+				computed: '_getLongLineLength(semiMajorAxis, focusToCenterDistance, inclination)'
+			},
+			shortLineLength: {
+				type: Number,
+				computed: '_getShortLineLength(semiMajorAxis, focusToCenterDistance, inclination)'
+			},
+			negativeSemiMajorAxis: {
+				type: Number,
+				computed: '_getNegative(semiMajorAxis)'
 			}
         },
         _getSemiMinorAxis: function(a, e) {
@@ -65,6 +80,15 @@
         },
         _getFlatFocusToCenterDistance: function(d, s) {
         	return d * s;
+        },
+        _getLongLineLength: function(a, d, i) {
+        	return -Math.sin(Math.rad(i)) * (a + d);
+        },
+        _getShortLineLength: function(a, d, i) {
+        	return Math.sin(Math.rad(i)) * (a - d);
+        },
+        _getNegative: function(x) {
+        	return -x;
         },
         hasInclination: function() {
         	return this.inclination !== 0;
