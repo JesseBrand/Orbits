@@ -18,23 +18,25 @@
     		<paper-input label="Eccentricity (e)" value="{{eccentricity}}"></paper-input>
 <!--     		<paper-input label="Distance from focus to center" value="{{focusCenterDist}}" readonly><div suffix>m</div></paper-input> -->
     		<paper-input label="Period (P)" value="{{period}}" readonly><div suffix>s</div></paper-input>
+<!--     		<paper-input label="Orbited Body Radius (r1)" value="{{orbitedBodyRadius}}" readonly><div suffix>m</div></paper-input> -->
     		<paper-input label="Orbited Body Mass (m1)" value="{{orbitedBodyMass}}" readonly><div suffix>kg</div></paper-input>
 <!--     		<paper-input label="Standard Gravitational Parameter (μ)" value="{{standardGravitationalParameter}}" readonly><div suffix>m³/s²</div></paper-input> -->
     		<paper-input label="Location of sat in orbit (t)" value="{{orbitAngle}}"><div suffix>deg</div></paper-input>
 <!--     		<paper-input label="Distance to center" value="{{distCenter}}" readonly><div suffix>m</div></paper-input> -->
 <!--     		<paper-input label="Distance to center (hor)" value="{{distCenterHor}}" readonly><div suffix>m</div></paper-input> -->
 <!--     		<paper-input label="Distance to center (ver)" value="{{distCenterVer}}" readonly><div suffix>m</div></paper-input> -->
-    		<paper-input label="Distance to body (r)" value="{{distFocus}}" readonly><div suffix>m</div></paper-input>
+    		<paper-input label="Distance to center of mass (r)" value="{{distFocus}}" readonly><div suffix>m</div></paper-input>
     		<paper-input label=" Orbital velocity at location (v)" value="{{orbitalVelocity}}" readonly><div suffix>m/s</div></paper-input>
     		<paper-input label="Inclination (i)" value="{{inclination}}"><div suffix>deg</div></paper-input>
    		</paper-card>
-   		<jb-3js-container camera-far-plane="65536">
-   			<jb-3js-flightcontrols rotation-x="-45" y="20" z="20"></jb-3js-flightcontrols>
-   			<jb-3js-directional-light x="-100"></jb-3js-directional-light>
-			<jb-orbit color="0x808080" semi-major-axis="100" eccentricity="0.8" inclination="{{inclination}}">
-				<jb-3js-sphere radius="2" color="0x0000ff"></jb-3js-sphere>
-				<jb-3js-star-sphere radius="1000"></jb-3js-star-sphere>
+   		<jb-3js-container camera-far-plane="16777216">
+   			<jb-3js-flightcontrols z="100000" speed="1000"></jb-3js-flightcontrols>
+   			<jb-3js-directional-light x="-149600000"></jb-3js-directional-light>
+			<jb-orbit color="0x808080" semi-major-axis="{{semiMajorAxisKM}}" eccentricity="{{eccentricity}}" inclination="{{inclination}}">
+				<jb-3js-sphere radius="1000" color="0x0000ff"></jb-3js-sphere>
+				<jb-3js-star-sphere radius="1000000"></jb-3js-star-sphere>
 			</jb-orbit>
+			
 		</jb-3js-container>
     	<content></content>
     </template>
@@ -50,6 +52,10 @@ Polymer({
     		value: 6771000,
     		observer: '_semiMajorAxisChanged'
     	},
+    	semiMajorAxisKM: {
+    		type: Number,
+    		computed: '_getKM(semiMajorAxis)'
+    	},
     	semiMinorAxis: {
     		type: Number,
     		observer: '_semiMinorAxisChanged'
@@ -62,6 +68,10 @@ Polymer({
     		type: Number,
     		value: 5.972e24,
     		observer: '_orbitedBodyMassChanged'
+    	},
+    	orbitedBodyRadius: {
+    		type: Number,
+    		value: 6371000
     	},
     	orbitAngle: {
     		type: Number,
@@ -171,7 +181,9 @@ Polymer({
    		var a = this.semiMajorAxis;
    		var r = this.distFocus;
    		this.orbitalVelocity = Math.sqrt(u * (2 / r - 1 / a));
-   	}
-   	
+   	},
+	_getKM: function(x) {
+		return x / 1000;
+	}   	
 });
 </script>
