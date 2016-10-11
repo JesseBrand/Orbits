@@ -27,7 +27,7 @@
     		<paper-input label=" Orbital velocity at location (v)" value="{{orbitalVelocity}}" readonly><div suffix>m/s</div></paper-input>
     		<paper-input label="Inclination (i)" value="{{inclination}}"><div suffix>deg</div></paper-input>
    		</paper-card>
-   		<jb-3js-container debug>
+   		<jb-3js-container camera-far-plane="65536">
    			<jb-3js-flightcontrols rotation-x="-45" y="20" z="20"></jb-3js-flightcontrols>
    			<jb-3js-directional-light x="-100"></jb-3js-directional-light>
 			<jb-orbit color="0x808080" semi-major-axis="100" eccentricity="0.8" inclination="{{inclination}}">
@@ -68,7 +68,7 @@ Polymer({
     	},
     	inclination: {
     		type: Number,
-    		value: 22
+    		value: 51
     	}
     },
     created: function() {
