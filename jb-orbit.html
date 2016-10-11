@@ -2,18 +2,18 @@
 <link rel="import" href="/components/jb-3js/jb-3js-helper-color.html" />
 <link rel="import" href="/components/jb-3js/jb-3js-helper-position.html" />
 <link rel="import" href="/components/jb-3js/jb-3js-transformation.html" />
-<link rel="import" href="jb-ellipse.html" />
+<link rel="import" href="/components/jb-3js/jb-3js-ellipse.html" />
 
 <dom-module id="jb-orbit">
     <template>
        	<template is="dom-if" if="{{hasInclination()}}">
 	        <jb-3js-transformation rotation-x="90" x="{{flatFocusToCenterDistance}}" scale-x="{{flatScaleX}}">
-	            <jb-ellipse draw-major-axis name="OrbitPlane" color="0x600000" semi-major-axis="{{semiMajorAxis}}" eccentricity="{{eccentricity}}"></jb-ellipse>
+	            <jb-3js-ellipse draw-major-axis name="OrbitPlane" color="0x600000" semi-major-axis="{{semiMajorAxis}}" eccentricity="{{eccentricity}}"></jb-ellipse>
 	        </jb-3js-transformation>
        	</template>
         <jb-3js-transformation x="{{x}}" y="{{y}}" z="{{z}}" rotation-z="{{inclination}}">
 	        <jb-3js-transformation rotation-x="90" x="{{focusToCenterDistance}}">
-	            <jb-ellipse draw-major-axis draw-latus-rectum name="Orbit" color="{{color}}" semi-major-axis="{{semiMajorAxis}}" eccentricity="{{eccentricity}}"></jb-ellipse>
+	            <jb-3js-ellipse draw-major-axis draw-latus-rectum name="Orbit" color="{{color}}" semi-major-axis="{{semiMajorAxis}}" eccentricity="{{eccentricity}}"></jb-ellipse>
 	        </jb-3js-transformation>
         </jb-3js-transformation>
         <content></content>
