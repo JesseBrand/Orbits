@@ -6,7 +6,8 @@
 <link rel="import" href="/components/jb-3js/jb-3js-flightcontrols.html" />
 <link rel="import" href="/components/jb-3js/jb-3js-helper-debug.html" />
 <link rel="import" href="/components/jb-3js/jb-3js-helper-math.html" />
-<link rel="import" href="/components/jb-3js/jb-3js-sphere.html" />
+<link rel="import" href="/components/jb-3js/jb-3js-sphere.html" />>
+<link rel="import" href="/components/jb-3js/jb-3js-star-sphere.html" />
 <link rel="import" href="jb-orbit.html" />
 
 <dom-module id="jb-orbital-reference">
@@ -32,6 +33,7 @@
    			<jb-3js-directional-light x="-100"></jb-3js-directional-light>
 			<jb-orbit color="0x808080" semi-major-axis="100" eccentricity="0.8" inclination="{{inclination}}">
 				<jb-3js-sphere radius="2" color="0x0000ff"></jb-3js-sphere>
+				<jb-3js-star-sphere radius="1000"></jb-3js-star-sphere>
 			</jb-orbit>
 		</jb-3js-container>
     	<content></content>
