@@ -7,7 +7,7 @@
 
 <dom-module id="jb-orbit">
     <template>
-       	<template is="dom-if" if="{{hasInclination()}}">
+       	<template is="dom-if" if="{{hasInclination(inclination)}}" restamp="true">
 	        <jb-3js-transformation rotation-x="90" x="{{flatFocusToCenterDistance}}" scale-x="{{flatScaleX}}">
 	            <jb-3js-ellipse draw-major-axis name="OrbitPlane" color="0x600000" semi-major-axis="{{semiMajorAxis}}" eccentricity="{{eccentricity}}"></jb-ellipse>
 	            <jb-3js-straight-line color="0x600000" x="{{semiMajorAxis}}" target-x="{{semiMajorAxis}}" target-z="{{longLineLength}}"></jb-3js-straight-line>
@@ -90,8 +90,9 @@
         _getNegative: function(x) {
         	return -x;
         },
-        hasInclination: function() {
-        	return this.inclination !== 0;
+        hasInclination: function(inclination) {
+        	console.log('eval', parseFloat(inclination) !== 0);
+        	return parseFloat(inclination) !== 0;
         }
     });
 </script>
