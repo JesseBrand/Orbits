@@ -11,6 +11,11 @@
 <link rel="import" href="jb-orbit.html" />
 
 <dom-module id="jb-orbital-reference">
+	<style>
+		paper-input[readonly] {
+			background-color: #dddddd;
+		}
+	</style>
     <template>
     	<paper-card style="padding:20px">
     		<paper-input label="Semi-Major Axis (a)" value="{{semiMajorAxis}}"><div suffix>m</div></paper-input>
